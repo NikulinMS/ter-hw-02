@@ -34,11 +34,11 @@ variable "vpc_name" {
 
 ###ssh vars
 
-variable "vms_ssh_root_key" {
-  type        = string
-  default     = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII2kpc8hkCtD5uVQdw0wUeGlNp/rKarSrCKoifhuRtCF shakal@Razer"
-  description = "ssh-keygen -t ed25519"
-}
+#variable "vms_ssh_root_key" {
+#  type        = string
+#  default     = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII2kpc8hkCtD5uVQdw0wUeGlNp/rKarSrCKoifhuRtCF shakal@Razer"
+#  description = "ssh-keygen -t ed25519"
+#}
 
 variable "name" {
   default     = "netology"

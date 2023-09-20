@@ -371,7 +371,115 @@ variable "role" {
 
 ### Задание 6
 
+1. Вместо использования трёх переменных ".._cores",".._memory",".._core_fraction" в блоке resources {...}, объедините их в переменные типа map с именами "vm_web_resources" и "vm_db_resources". В качестве продвинутой практики попробуйте создать одну map-переменную vms_resources и уже внутри неё конфиги обеих ВМ — вложенный map.
+2. Также поступите с блоком metadata {serial-port-enable, ssh-keys}, эта переменная должна быть общая для всех ваших ВМ.
+3. Найдите и удалите все более не используемые переменные проекта.
+4. Проверьте terraform plan. Изменений быть не должно.
 
+### Ответ:
+
+В файл ```vms_platform.tf``` добавил переменные vms_resources и vms_metadata с конфигурациями для обеих ВМ:
+```
+variable "vms_resources" {
+  type = map(object({
+    cores = number
+    memory = number
+    core_fraction = number
+  }))
+  default = {
+    vm_web_resources = {
+      cores         = 2
+      memory        = 1
+      core_fraction = 5
+    }
+    vm_db_resources = {
+      cores         = 2
+      memory        = 2
+      core_fraction = 20
+    }
+  }
+}
+
+variable "vms_metadata" {
+  type = map
+  default = {
+    serial-port-enable = 1
+    ssh-keys = "ubuntu:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII2kpc8hkCtD5uVQdw0wUeGlNp/rKarSrCKoifhuRtCF shakal@Razer"
+  }
+}
+```
+Отредактировал файл ```main.tf```, внес ссылки на новые переменные:
+```
+resource "yandex_compute_instance" "web" {
+  name        = local.web
+  platform_id = var.vm_web_platform_id
+  resources {
+    cores         = var.vms_resources["vm_web_resources"]["cores"]
+    memory        = var.vms_resources["vm_web_resources"]["memory"]
+    core_fraction = var.vms_resources["vm_web_resources"]["core_fraction"]
+  }
+  boot_disk {
+    initialize_params {
+      image_id = data.yandex_compute_image.ubuntu.image_id
+    }
+  }
+  scheduling_policy {
+    preemptible = true
+  }
+  network_interface {
+    subnet_id = yandex_vpc_subnet.develop.id
+    nat       = true
+  }
+
+  metadata = {
+    serial-port-enable = var.vms_metadata["serial-port-enable"]
+    ssh-keys           = var.vms_metadata["ssh-keys"]
+  }
+
+}
+
+resource "yandex_compute_instance" "db" {
+  name        = local.db
+  platform_id = var.vm_db_platform_id
+  resources {
+    cores         = var.vms_resources["vm_db_resources"]["cores"]
+    memory        = var.vms_resources["vm_db_resources"]["memory"]
+    core_fraction = var.vms_resources["vm_db_resources"]["core_fraction"]
+  }
+  boot_disk {
+    initialize_params {
+      image_id = data.yandex_compute_image.ubuntu.image_id
+    }
+  }
+  scheduling_policy {
+    preemptible = true
+  }
+  network_interface {
+    subnet_id = yandex_vpc_subnet.develop.id
+    nat       = true
+  }
+
+  metadata = {
+    serial-port-enable = var.vms_metadata["serial-port-enable"]
+    ssh-keys           = var.vms_metadata["ssh-keys"]
+  }
+
+}
+```
+Закоментировал неиспользуемые переменные и запустил команду ```terraform plan```, изменений не внесено:
+```
+PS D:\Книги\DevOps\GitHub\ter-homeworks\02\src> terraform plan
+data.yandex_compute_image.ubuntu: Reading...
+yandex_vpc_network.develop: Refreshing state... [id=enpt9e7o3rjp2r9eobs7]
+data.yandex_compute_image.ubuntu: Read complete after 2s [id=fd8dfofgv8k45mqv25nq]
+yandex_vpc_subnet.develop: Refreshing state... [id=e9b87o9f1j4gq6vhl36d]
+yandex_compute_instance.db: Refreshing state... [id=fhm0acsfkhn0jhrvtf87]
+yandex_compute_instance.web: Refreshing state... [id=fhmoe74jg3ahhp53g8rn]
+
+No changes. Your infrastructure matches the configuration.
+
+Terraform has compared your real infrastructure against your configuration and found no differences, so no changes are needed.
+```
 
 ---
 

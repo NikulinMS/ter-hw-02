@@ -16,9 +16,9 @@ resource "yandex_compute_instance" "web" {
   name        = local.web
   platform_id = var.vm_web_platform_id
   resources {
-    cores         = var.vm_web_cores
-    memory        = var.vm_web_memory
-    core_fraction = var.vm_web_core_fraction
+    cores         = var.vms_resources["vm_web_resources"]["cores"]
+    memory        = var.vms_resources["vm_web_resources"]["memory"]
+    core_fraction = var.vms_resources["vm_web_resources"]["core_fraction"]
   }
   boot_disk {
     initialize_params {
@@ -34,8 +34,8 @@ resource "yandex_compute_instance" "web" {
   }
 
   metadata = {
-    serial-port-enable = 1
-    ssh-keys           = "ubuntu:${var.vms_ssh_root_key}"
+    serial-port-enable = var.vms_metadata["serial-port-enable"]
+    ssh-keys           = var.vms_metadata["ssh-keys"]
   }
 
 }
@@ -44,9 +44,9 @@ resource "yandex_compute_instance" "db" {
   name        = local.db
   platform_id = var.vm_db_platform_id
   resources {
-    cores         = var.vm_db_cores
-    memory        = var.vm_db_memory
-    core_fraction = var.vm_db_core_fraction
+    cores         = var.vms_resources["vm_db_resources"]["cores"]
+    memory        = var.vms_resources["vm_db_resources"]["memory"]
+    core_fraction = var.vms_resources["vm_db_resources"]["core_fraction"]
   }
   boot_disk {
     initialize_params {
@@ -62,8 +62,8 @@ resource "yandex_compute_instance" "db" {
   }
 
   metadata = {
-    serial-port-enable = 1
-    ssh-keys           = "ubuntu:${var.vms_ssh_root_key}"
+    serial-port-enable = var.vms_metadata["serial-port-enable"]
+    ssh-keys           = var.vms_metadata["ssh-keys"]
   }
 
 }
