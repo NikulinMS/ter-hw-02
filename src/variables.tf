@@ -40,17 +40,4 @@ variable "vms_ssh_root_key" {
   description = "ssh-keygen -t ed25519"
 }
 
-variable "vm_web_family" {
-  type = string
-  default = "ubuntu-2004-lts"
-}
 
-variable "vm_web_name" {
-  type = string
-  default = "netology-develop-platform-web"
-}
-
-variable "vm_web_platform_id" {
-  type = string
-  default = "standard-v1"
-}
