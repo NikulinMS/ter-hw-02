@@ -112,7 +112,7 @@ variable "vm_web_platform_id" {
 
 ### Задание 3
 
-1. Создайте в корне проекта файл 'vms_platform.tf' . Перенесите в него все переменные первой ВМ.
+1. Создайте в корне проекта файл 'vms_platform.tf'. Перенесите в него все переменные первой ВМ.
 2. Скопируйте блок ресурса и создайте с его помощью вторую ВМ в файле main.tf: "netology-develop-platform-db" , cores = 2, memory = 2, core_fraction = 20. Объявите её переменные с префиксом vm_db_ в том же файле ('vms_platform.tf').
 3. Примените изменения.
 
@@ -263,25 +263,30 @@ Note: You didn't use the -out option to save this plan, so Terraform can't guara
 
 ### Задание 4
 
-`Приведите ответ в свободной форме........`
+1. Объявите в файле outputs.tf output типа map, содержащий { instance_name = external_ip } для каждой из ВМ.
+2. Примените изменения.
+В качестве решения приложите вывод значений ip-адресов команды terraform output.
 
-1. `Заполните здесь этапы выполнения, если требуется ....`
-2. `Заполните здесь этапы выполнения, если требуется ....`
-3. `Заполните здесь этапы выполнения, если требуется ....`
-4. `Заполните здесь этапы выполнения, если требуется ....`
-5. `Заполните здесь этапы выполнения, если требуется ....`
-6. 
-
+### Ответ:
+Создадим новый файл ```outputs.tf``` и добавим в него данные для вывода внешнего ip адреса каждой ВМ:
 ```
-Поле для вставки кода...
-....
-....
-....
-....
+output "vm_external_ip_address_web" {
+value = yandex_compute_instance.web.network_interface[0].nat_ip_address
+description = "vm external ip"
+}
+
+output "vm_external_ip_address_db" {
+value = yandex_compute_instance.db.network_interface[0].nat_ip_address
+description = "vm external ip"
+}
+```
+Результат вывода команды ```terraform output```:
+```
+PS D:\Книги\DevOps\GitHub\ter-homeworks\02\src> terraform output      
+vm_external_ip_address_db = "51.250.0.45"
+vm_external_ip_address_web = "51.250.80.16"
 ```
 
-`При необходимости прикрепитe сюда скриншоты
-![Название скриншота](ссылка на скриншот)`
 
 ---
 ## Дополнительные задания (со звездочкой*)
