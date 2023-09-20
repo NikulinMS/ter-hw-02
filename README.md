@@ -64,9 +64,9 @@ resource "yandex_compute_instance" "platform" {
   name        = var.vm_web_name
   platform_id = var.vm_web_platform_id
   resources {
-    cores         = 2
-    memory        = 1
-    core_fraction = 5
+    cores         = var.vm_web_cores
+    memory        = var.vm_web_memory
+    core_fraction = var.vm_web_core_fraction
   }
   boot_disk {
     initialize_params {
@@ -104,6 +104,21 @@ variable "vm_web_platform_id" {
   type = string
   default = "standard-v1"
 }
+
+variable "vm_web_cores" {
+  type = number
+  default = 2
+}
+
+variable "vm_web_memory" {
+  type = number
+  default = 1
+}
+
+variable "vm_web_core_fraction" {
+  type = number
+  default = 5
+}
 ```
 Выполним ```terraform plan```
 ![task_2_1.png](img%2Ftask_2_1.png)
@@ -135,6 +150,21 @@ variable "vm_web_platform_id" {
   default = "standard-v1"
 }
 
+variable "vm_web_cores" {
+  type = number
+  default = 2
+}
+
+variable "vm_web_memory" {
+  type = number
+  default = 1
+}
+
+variable "vm_web_core_fraction" {
+  type = number
+  default = 5
+}
+
 variable "vm_db_name" {
   type = string
   default = "netology-develop-platform-db"
@@ -144,6 +174,21 @@ variable "vm_db_platform_id" {
   type = string
   default = "standard-v1"
 }
+
+variable "vm_db_cores" {
+  type = number
+  default = 2
+}
+
+variable "vm_db_memory" {
+  type = number
+  default = 2
+}
+
+variable "vm_db_core_fraction" {
+  type = number
+  default = 20
+}
 ```
 Скопируем ресурс для создания еще одной ВМ в файле ```main.tf``` и подставим объявленные переменные:
 ```
@@ -151,9 +196,9 @@ resource "yandex_compute_instance" "platform_2" {
   name        = var.vm_db_name
   platform_id = var.vm_db_platform_id
   resources {
-    cores         = 2
-    memory        = 2
-    core_fraction = 20
+    cores         = var.vm_db_cores
+    memory        = var.vm_db_memory
+    core_fraction = var.vm_db_core_fraction
   }
   boot_disk {
     initialize_params {
