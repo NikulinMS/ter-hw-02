@@ -40,4 +40,18 @@ variable "vms_ssh_root_key" {
   description = "ssh-keygen -t ed25519"
 }
 
+variable "name" {
+  default     = "netology"
+}
 
+variable "env" {
+  default     = "develop"
+}
+
+variable "project" {
+  default     = "platform"
+}
+
+variable "role" {
+   default = ["web", "db"]
+}

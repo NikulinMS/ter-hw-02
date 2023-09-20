@@ -332,8 +332,49 @@ vm_external_ip_address_db = "51.250.0.45"
 vm_external_ip_address_web = "51.250.80.16"
 ```
 
+---
+
+### Задание 5
+
+1. В файле locals.tf опишите в одном local-блоке имя каждой ВМ, используйте интерполяцию ${..} с несколькими переменными по примеру из лекции.
+2. Замените переменные с именами ВМ из файла variables.tf на созданные вами local-переменные.
+3. Примените изменения.
+
+### Ответ:
+
+Добавим данные в файл ```locals.tf``` и ```variables.tf```:
+```
+locals {
+  web = "${ var.name }-${ var.env }-${ var.project }-${ var.role[0] }"
+  db = "${ var.name }-${ var.env }-${ var.project }-${ var.role[1] }"
+}
+```
+```
+variable "name" {
+  default     = "netology"
+}
+
+variable "env" {
+  default     = "develop"
+}
+
+variable "project" {
+  default     = "platform"
+}
+
+variable "role" {
+   default = ["web", "db"]
+}
+```
 
 ---
+
+### Задание 6
+
+
+
+---
+
 ## Дополнительные задания (со звездочкой*)
 
 
