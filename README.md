@@ -49,26 +49,64 @@ resource "yandex_compute_instance" "platform" {
 
 ### Задание 2
 
-`Приведите ответ в свободной форме........`
+1. Изучите файлы проекта.
+2. Замените все хардкод-значения для ресурсов yandex_compute_image и yandex_compute_instance на отдельные переменные. К названиям переменных ВМ добавьте в начало префикс vm_web_ . Пример: vm_web_name.
+3. Объявите нужные переменные в файле variables.tf, обязательно указывайте тип переменной. Заполните их default прежними значениями из main.tf.
+4. Проверьте terraform plan. Изменений быть не должно.
 
-1. `Заполните здесь этапы выполнения, если требуется ....`
-2. `Заполните здесь этапы выполнения, если требуется ....`
-3. `Заполните здесь этапы выполнения, если требуется ....`
-4. `Заполните здесь этапы выполнения, если требуется ....`
-5. `Заполните здесь этапы выполнения, если требуется ....`
-6. 
-
+### Ответы:
+Изменим main.tf:
 ```
-Поле для вставки кода...
-....
-....
-....
-....
+data "yandex_compute_image" "ubuntu" {
+  family = var.vm_web_family
+}
+resource "yandex_compute_instance" "platform" {
+  name        = var.vm_web_name
+  platform_id = var.vm_web_platform_id
+  resources {
+    cores         = 2
+    memory        = 1
+    core_fraction = 5
+  }
+  boot_disk {
+    initialize_params {
+      image_id = data.yandex_compute_image.ubuntu.image_id
+    }
+  }
+  scheduling_policy {
+    preemptible = true
+  }
+  network_interface {
+    subnet_id = yandex_vpc_subnet.develop.id
+    nat       = true
+  }
+
+  metadata = {
+    serial-port-enable = 1
+    ssh-keys           = "ubuntu:${var.vms_ssh_root_key}"
+  }
+
+}
 ```
+Добавим новые переменные в variables.tf:
+```
+variable "vm_web_family" {
+  type = string
+  default = "ubuntu-2004-lts"
+}
 
-`При необходимости прикрепитe сюда скриншоты
-![Название скриншота 2](ссылка на скриншот 2)`
+variable "vm_web_name" {
+  type = string
+  default = "netology-develop-platform-web"
+}
 
+variable "vm_web_platform_id" {
+  type = string
+  default = "standard-v1"
+}
+```
+Выполним ```terraform plan```
+![task_2_1.png](img%2Ftask_2_1.png)
 
 ---
 
