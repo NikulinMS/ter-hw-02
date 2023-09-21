@@ -55,7 +55,7 @@ resource "yandex_compute_instance" "platform" {
 4. Проверьте terraform plan. Изменений быть не должно.
 
 ### Ответы:
-Изменим main.tf:
+Изменим [main.tf](src%2Fmain.tf):
 ```
 data "yandex_compute_image" "ubuntu" {
   family = var.vm_web_family
@@ -88,7 +88,7 @@ resource "yandex_compute_instance" "platform" {
 
 }
 ```
-Добавим новые переменные в variables.tf:
+Добавим новые переменные в [variables.tf](src%2Fvariables.tf):
 ```
 variable "vm_web_family" {
   type = string
@@ -133,7 +133,7 @@ variable "vm_web_core_fraction" {
 
 ### Ответы:
 
-Создадим новый файл ```vms_platform.tf```, в который перенесем переменные ВМ из файла ```variables.tf```, а так же объявим переменные для новой ВМ:
+Создадим новый файл [vms_platform.tf](src%2Fvms_platform.tf), в который перенесем переменные ВМ из файла [variables.tf](src%2Fvariables.tf), а так же объявим переменные для новой ВМ:
 ```
 variable "vm_web_family" {
   type = string
@@ -190,7 +190,7 @@ variable "vm_db_core_fraction" {
   default = 20
 }
 ```
-Скопируем ресурс для создания еще одной ВМ в файле ```main.tf``` и подставим объявленные переменные:
+Скопируем ресурс для создания еще одной ВМ в файле [main.tf](src%2Fmain.tf) и подставим объявленные переменные:
 ```
 resource "yandex_compute_instance" "platform_2" {
   name        = var.vm_db_name
@@ -313,7 +313,7 @@ Note: You didn't use the -out option to save this plan, so Terraform can't guara
 В качестве решения приложите вывод значений ip-адресов команды terraform output.
 
 ### Ответ:
-Создадим новый файл ```outputs.tf``` и добавим в него данные для вывода внешнего ip адреса каждой ВМ:
+Создадим новый файл [outputs.tf](src%2Foutputs.tf) и добавим в него данные для вывода внешнего ip адреса каждой ВМ:
 ```
 output "vm_external_ip_address_web" {
 value = yandex_compute_instance.web.network_interface[0].nat_ip_address
@@ -342,7 +342,7 @@ vm_external_ip_address_web = "51.250.80.16"
 
 ### Ответ:
 
-Добавим данные в файл ```locals.tf``` и ```variables.tf```:
+Добавим данные в файл [locals.tf](src%2Flocals.tf) и [variables.tf](src%2Fvariables.tf):
 ```
 locals {
   web = "${ var.name }-${ var.env }-${ var.project }-${ var.role[0] }"
@@ -378,7 +378,7 @@ variable "role" {
 
 ### Ответ:
 
-В файл ```vms_platform.tf``` добавил переменные vms_resources и vms_metadata с конфигурациями для обеих ВМ:
+В файл [vms_platform.tf](src%2Fvms_platform.tf) добавил переменные vms_resources и vms_metadata с конфигурациями для обеих ВМ:
 ```
 variable "vms_resources" {
   type = map(object({
@@ -408,7 +408,7 @@ variable "vms_metadata" {
   }
 }
 ```
-Отредактировал файл ```main.tf```, внес ссылки на новые переменные:
+Отредактировал файл [main.tf](src%2Fmain.tf), внес ссылки на новые переменные:
 ```
 resource "yandex_compute_instance" "web" {
   name        = local.web
