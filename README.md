@@ -486,16 +486,35 @@ Terraform has compared your real infrastructure against your configuration and f
 ## Дополнительные задания (со звездочкой*)
 
 
-### Задание 5
+### Задание 7*
 
-`Приведите ответ в свободной форме........`
+Изучите содержимое файла console.tf. Откройте terraform console, выполните следующие задания:
 
-1. `Заполните здесь этапы выполнения, если требуется ....`
-2. `Заполните здесь этапы выполнения, если требуется ....`
-3. `Заполните здесь этапы выполнения, если требуется ....`
-4. `Заполните здесь этапы выполнения, если требуется ....`
-5. `Заполните здесь этапы выполнения, если требуется ....`
-6. 
+1. Напишите, какой командой можно отобразить второй элемент списка test_list.
+2. Найдите длину списка test_list с помощью функции length(<имя переменной>).
+3. Напишите, какой командой можно отобразить значение ключа admin из map test_map.
+4. Напишите interpolation-выражение, результатом которого будет: "John is admin for production server based on OS ubuntu-20-04 with X vcpu, Y ram and Z virtual disks", используйте данные из переменных test_list, test_map, servers и функцию length() для подстановки значений.
+В качестве решения предоставьте необходимые команды и их вывод.
 
-`При необходимости прикрепитe сюда скриншоты
-![Название скриншота](ссылка на скриншот)`
+### Ответ:
+
+1. 
+```
+> local.test_list[1]
+"staging"
+```
+2. 
+```
+> length(local.test_list)
+3
+```
+3. 
+```
+> local.test_map["admin"]
+"John"
+```
+4. 
+```
+> "${ local.test_map["admin"] } is admin for ${ local.test_list[2] } server based on OS ${ local.servers["stage"]["image"] } with X vcpu, Y ram and Z virtual disks"
+"John is admin for production server based on OS ubuntu-20-04 with X vcpu, Y ram and Z virtual disks"
+```
